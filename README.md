@@ -171,9 +171,12 @@ export default function () {
 }
 ```
 
-**Running K6 Performance Tests**
+**Install K6**
+```bash
+  sudo chown -R admin /opt/homebrew && brew install k6
+```
 
-From the `performance-tests/` directory:
+**Running K6 Performance Tests**
 
 ```bash
 # Run the login performance test and output results to k6-results.json

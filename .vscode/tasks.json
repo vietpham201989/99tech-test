@@ -106,9 +106,33 @@
       "command": "if [ \"$(uname)\" = \"Darwin\" ]; then sudo npm cache clean --force && npx allure generate allure-results -o allure-report && npx allure open allure-report; else npm cache clean --force && npx allure generate allure-results -o allure-report && npx allure open allure-report; fi"
     },
     {
-      "label": "Run under-tests of K6",
+      "label": "Install K6",
       "type": "shell",
-      "command": "export $(grep -v '^#' .env${input:env_ui} | xargs) && k6 run ${input:ui_test_file_under_tests}",
+      "command": "sudo chown -R admin /opt/homebrew && brew install k6",
+      "problemMatcher": [],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "never",
+        "panel": "dedicated",
+        "close": true
+      }
+    },
+    {
+      "label": "Run K6 Performance Test",
+      "type": "shell",
+      "command": "npm run test:performance -- -e ENV:${input:env_performance} ${input:performance_test_file}",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run K6 Performance Test (CI Mode)",
+      "type": "shell",
+      "command": "npm run test:performance:ci -- -e ENV:${input:env_performance} ${input:performance_test_file}",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
       "problemMatcher": []
     }
   ],
@@ -136,8 +160,8 @@
     {
       "id": "ui_test_file_under_tests",
       "type": "promptString",
-      "description": "Enter the test file(s) to run or tags. Example: under-tests/*.js",
-      "default": "under-tests/*.js"
+      "description": "Enter the test file(s) to run or tags. Example: performance-tests/*.js",
+      "default": "performance-tests/*.js"
     },
     // gherkin_tests
     {
@@ -171,6 +195,20 @@
       "description": "Select browser for Gherkin E2E tests",
       "options": ["chromium", "firefox", "webkit"],
       "default": "chromium"
+    },
+    // performance_tests
+    {
+      "id": "env_performance",
+      "type": "pickString",
+      "description": "Select environment for K6 performance tests",
+      "options": ["stg", "uat"],
+      "default": "stg"
+    },
+    {
+      "id": "performance_test_file",
+      "type": "promptString",
+      "description": "Enter the K6 test file to run. Example: login-test.js",
+      "default": "login-test.js"
     }
   ]
 }
