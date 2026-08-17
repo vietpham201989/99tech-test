@@ -17,13 +17,9 @@ export const options = {
       maxVUs: 50, // maximum virtual users
       stages: [
         { duration: '5s', target: 50 }, // ramp up to 50 iterations/s
-        { duration: '20', target: 50 }, // stay at 50 iterations/s
-        // { duration: '30s', target: 10 }, // ramp down to 10 iterations/s
-        // { duration: '1m', target: 10 }, // stay at 10 iterations/s
-        // { duration: '30s', target: 20 }, // ramp up to 20 iterations/s
-        // { duration: '1m', target: 20 }, // stay at 20 iterations/s
-        // { duration: '30s', target: 5 }, // ramp down to 5 iterations/s
-        // { duration: '30s', target: 0 }, // ramp down to 0 iterations/s
+        { duration: '20s', target: 50 }, // stay at 50 iterations/s
+        { duration: '10s', target: 10 }, // ramp down to 10 iterations/s
+        { duration: '5s', target: 0 }, // ramp down to 0 iterations/s
       ],
     },
   },
