@@ -14,7 +14,7 @@ export class BasePage {
 
   async openLoginPage() {
     await this.navigate("/")
-    await this.waitForPageLoaded(40000)
+    // await this.waitForPageLoaded(40000)
     return this
   }
 
