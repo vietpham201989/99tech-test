@@ -1,0 +1,55 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    //ui_tests
+    {
+      "label": "Install library of ui",
+      "type": "shell",
+      "command": "sudo npm install && sudo npm ci && npx playwright install --with-deps",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "never",
+        "panel": "dedicated",
+        "close": true
+      }
+    },
+    {
+      "label": "Run test cases of ui - chromium",
+      "type": "shell",
+      "command": "RUNNING_ENV=${input:env_ui} npx playwright test --project=chromium --headed  ${input:ui_test_file}"
+    },
+    {
+      "label": "Run test cases of ui - firefox",
+      "type": "shell",
+      "command": "RUNNING_ENV=${input:env_ui} npx playwright test --project=firefox --headed  ${input:ui_test_file}",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "View report of ui_tests",
+      "type": "shell",
+      "command": "allure generate --single-file allure-results --clean && open allure-report/index.html"
+    }
+  ],
+  "inputs": [
+    // ui_tests
+    {
+      "id": "env_ui",
+      "type": "pickString",
+      "description": "Select environment",
+      "options": [".stg", ".uat "],
+      "default": ".uat "
+    },
+    {
+      "id": "ui_test_file",
+      "type": "promptString",
+      "description": "Enter the test file(s) to run or tags. Example: tests/e2e/*.spec.ts --grep '@regression'",
+      "default": "tests/**/*.spec.ts --grep '@smoke'"
+    }
+  ]
+}

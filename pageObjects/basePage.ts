@@ -1,5 +1,5 @@
 import { expect, Locator, Page } from "@playwright/test"
-
+const time = 10000
 export class BasePage {
   protected page: Page
 
@@ -10,6 +10,10 @@ export class BasePage {
   setPage(page: Page) {
     this.page = page
     return this
+  }
+
+  getLoc(selector: string | Locator) {
+    return typeof selector === "string" ? this.page.locator(selector) : selector
   }
 
   async openLoginPage() {
@@ -23,35 +27,26 @@ export class BasePage {
       timeout: timeout,
     })
   }
+  async delay(ms: number = 2000) {
+    return new Promise((resolve) => setTimeout(resolve, ms))
+  }
 
   async waitForTimeout(timeout: number) {
     return this.page.waitForTimeout(timeout)
   }
 
-  async waitForSelector(selector: string | Locator, timeout: number = 10000) {
-    if (typeof selector === "string") {
-      await this.page.waitForSelector(selector, {
-        timeout: timeout,
-        state: "attached",
-      })
-    } else {
-      await selector.waitFor({ state: "attached", timeout: timeout })
-    }
+  async waitForSelector(selector: string | Locator, timeout: number = time) {
+    const loc = this.getLoc(selector)
+    await loc.waitFor({ state: "attached", timeout: timeout })
     return this
   }
 
   async waitForSelectorToBeVisible(
     selector: string | Locator,
-    timeout: number = 10000
+    timeout: number = time
   ) {
-    if (typeof selector === "string") {
-      await this.page.waitForSelector(selector, {
-        timeout: timeout,
-        state: "visible",
-      })
-    } else {
-      await selector.waitFor({ state: "visible", timeout: timeout })
-    }
+    const loc = this.getLoc(selector)
+    await loc.waitFor({ state: "visible", timeout: timeout })
     return this
   }
 
@@ -60,56 +55,73 @@ export class BasePage {
     return this
   }
 
-  async click(selector: string | Locator) {
-    if (typeof selector === "string") {
-      await this.page.click(selector, { force: true })
-    } else {
-      await selector.click({ force: true })
-    }
+  async click(selector: string | Locator, timeout: number = time) {
+    const loc = this.getLoc(selector)
+    await loc.waitFor({ state: "visible", timeout })
+    await loc.click({ force: true })
     return this
   }
 
-  async fill(selector: string | Locator, text: string) {
-    if (typeof selector === "string") {
-      await this.page.fill(selector, text)
-    } else {
-      await selector.fill(text)
-    }
+  async count(selector: string | Locator) {
+    const loc = this.getLoc(selector)
+    return await loc.count()
+  }
+
+  async fill(selector: string | Locator, text: string, timeout: number = time) {
+    const loc = this.getLoc(selector)
+    await loc.waitFor({ state: "visible", timeout })
+    await loc.fill(text)
     return this
   }
 
-  async selectRadioOption(selector: string | Locator) {
-    if (typeof selector === "string") {
-      await this.page.setChecked(selector, true, {
-        force: true,
-      })
-    } else {
-      await selector.setChecked(true, {
-        force: true,
-      })
-    }
+  async getAttr(selector: string, attribute: string, timeout: number = time) {
+    const loc = this.getLoc(selector)
+    return await loc.getAttribute(attribute, { timeout: timeout })
+  }
+
+  async getText(selector: string | Locator, timeout: number = time) {
+    const loc = this.getLoc(selector)
+    await loc.waitFor({ state: "visible", timeout })
+    return await loc.textContent()
+  }
+
+  async selectRadioOption(selector: string | Locator, timeout: number = time) {
+    const loc = this.getLoc(selector)
+    await loc.waitFor({ state: "visible", timeout })
+    await loc.setChecked(true, { force: true })
     return this
   }
 
   async isVisible(
     selector: string | Locator,
-    timeout: number = 10000
+    timeout: number = time
   ): Promise<boolean> {
-    if (typeof selector === "string") {
-      return await this.page.isVisible(selector, {
-        timeout: timeout,
-      })
-    }
-    return await selector.isVisible({
-      timeout: timeout,
-    })
+    const loc = this.getLoc(selector)
+    return await loc.isVisible({ timeout: timeout })
+  }
+
+  async isDisplayed(
+    selector: string | Locator,
+    timeout: number = time
+  ): Promise<boolean> {
+    const loc = this.getLoc(selector)
+    return loc
+      .first()
+      .waitFor({ timeout: timeout })
+      .then(() => true)
+      .catch(() => false)
   }
 
   async pageShouldContainText(text: string, ignoreCase: boolean = false) {
     await expect(this.page.locator("body")).toContainText(text, {
-      timeout: 10000,
+      timeout: time,
       ignoreCase: ignoreCase,
     })
     return this
+  }
+
+  async clickPoint(x: number, y: number): Promise<void> {
+    await this.page.mouse.move(x, y)
+    await this.page.mouse.click(x, y)
   }
 }

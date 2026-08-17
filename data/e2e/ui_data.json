@@ -1,0 +1,10 @@
+{
+  "alert": {
+    "productAdded": "Product added",
+    "addMsgSuccess": "Thanks for the message!!",
+    "wrongPass": "Wrong password.",
+    "notExist": "User does not exist.",
+    "notUserAndPasss": "Please fill out Username and Password.",
+    "notNameAndCreditCard": "Please fill out Name and Creditcard."
+  }
+}
