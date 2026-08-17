@@ -9,9 +9,9 @@ module.exports = {
       "progress-bar",
       "pretty",
       "summary",
-      "json:tests/gherkin/cucumber-report.json",
-      "html:tests/gherkin/cucumber-report.html",
-      "message:tests/gherkin/cucumber-messages.ndjson",
+      "json:tests/gherkin/reports/cucumber-report.json",
+      "html:tests/gherkin/reports/cucumber-report.html",
+      "message:tests/gherkin/reports/cucumber-messages.ndjson",
     ],
     formatOptions: {
       snippetInterface: "async-await",

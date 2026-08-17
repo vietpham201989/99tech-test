@@ -4,8 +4,8 @@ A Playwright-based test automation framework with multi-environment support, com
 
 ## Project Structure
 
-```
-tech99/
+```bash
+99tech/
 ├── .github/workflows/          # GitHub Actions workflows
 ├── api/                       # API classes (AccountApi, CartApi, etc.)
 ├── data/                      # Test data (account.json, config.json, etc.)
@@ -42,6 +42,7 @@ npx playwright install --with-deps
 Create environment-specific `.env` files:
 
 **`.env.stg`** (Staging):
+
 ```bash
 BASE_URL=https://staging.demoblaze.com
 API_URL=https://api.staging.demoblaze.com
@@ -49,6 +50,7 @@ TIMEOUT=30000
 ```
 
 **`.env.uat`** (UAT):
+
 ```bash
 BASE_URL=https://uat.demoblaze.com
 API_URL=https://api.uat.demoblaze.com
@@ -172,6 +174,7 @@ export default function () {
 ```
 
 **Install K6**
+
 ```bash
   sudo chown -R admin /opt/homebrew && brew install k6
 ```
@@ -203,12 +206,12 @@ npm run test:e2e-firefox         # Run E2E in Firefox (headed)
 npm run test:e2e-firefox:ci      # Run E2E in Firefox (headless)
 
 # Gherkin Tests
-npm run test:gherkin:e2e         # All E2E Gherkin tests
+npm run test:gherkin:e2e          # All E2E Gherkin tests
 npm run test:gherkin:e2e:chromium # E2E in Chromium
 npm run test:gherkin:e2e:firefox  # E2E in Firefox
 npm run test:gherkin:e2e:webkit   # E2E in WebKit
-npm run test:gherkin:api         # All API Gherkin tests
-npm run test:gherkin:all         # All Gherkin tests
+npm run test:gherkin:api          # All API Gherkin tests
+npm run test:gherkin:all          # All Gherkin tests
 
 # K6 Performance Tests (from performance-tests/ directory)
 cd performance-tests && npm run test:performance -- -e ENV:stg login-test.js
@@ -252,6 +255,7 @@ For push/PR events, tests run against **staging** by default.
 ### Artifacts
 
 After workflow completion, you can download:
+
 - Cucumber Reports (HTML/JSON)
 - Allure Results (JSON files)
 - Allure Report (Single HTML file)

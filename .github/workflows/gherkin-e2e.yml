@@ -35,7 +35,7 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Create report directories
         run: |
-          mkdir -p tests/gherkin
+          mkdir -p tests/gherkin/reports
           mkdir -p allure-results
           mkdir -p test-results/gherkin-screenshots
       - name: Run Gherkin E2E tests
@@ -45,15 +45,7 @@ jobs:
         if: ${{ !cancelled() }}
         with:
           name: cucumber-report-e2e
-          path: tests/gherkin/cucumber-report.html
-          retention-days: 10
-          if-no-files-found: ignore
-      - name: Upload Cucumber JSON
-        uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: cucumber-json-e2e
-          path: tests/gherkin/cucumber-report.json
+          path: tests/gherkin/reports
           retention-days: 10
           if-no-files-found: ignore
       - name: Upload Allure Results
