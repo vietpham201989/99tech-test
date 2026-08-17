@@ -56,6 +56,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: k6-results
+          name: k6-reports
           path: performance-tests/reports/
           retention-days: 30
