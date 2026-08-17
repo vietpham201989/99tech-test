@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "scripts": {
-    "test:performance": "k6 run --out json=./k6-results.json --http-debug=full",
-    "test:performance:ci": "k6 run --out json=./k6-results.json"
+    "test:performance": "mkdir -p reports && k6 run --out json=./reports/k6-results.json --http-debug=full",
+    "test:performance:ci": "mkdir -p reports && k6 run --out json=./reports/k6-results.json"
   },
   "devDependencies": {
     "k6": "^0.0.0"

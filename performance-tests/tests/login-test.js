@@ -3,8 +3,8 @@
 import http from "k6/http"
 import { check, sleep } from "k6"
 import encoding from "k6/encoding"
-const accData = JSON.parse(open("../data/account.json"))
-const configData = JSON.parse(open("../data/api/config.json"))
+const accData = JSON.parse(open("../../data/account.json"))
+const configData = JSON.parse(open("../../data/api/config.json"))
 const env = __ENV.ENV || 'stg';
 
 export const options = {

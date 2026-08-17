@@ -144,3 +144,6 @@ playwright-report
 allure-report
 # Gherkin
 tests/gherkin/reports
+
+# Performance
+performance-tests/reports
