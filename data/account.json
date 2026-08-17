@@ -1,0 +1,10 @@
+{
+  "stg": {
+    "username": "admin",
+    "password": "admin"
+  },
+  "uat": {
+    "username": "admin",
+    "password": "admin"
+  }
+}

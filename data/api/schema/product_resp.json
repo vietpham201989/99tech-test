@@ -1,0 +1,38 @@
+{
+  "PRODUCTS_SCHEMA": {
+    "type": "object",
+    "properties": {
+      "Items": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "cat": { "type": "string" },
+            "desc": { "type": "string" },
+            "id": { "type": "number" },
+            "img": { "type": "string" },
+            "price": { "type": "number" },
+            "title": { "type": "string" }
+          }
+        }
+      },
+      "LastEvaluatedKey": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" }
+        }
+      }
+    }
+  },
+  "PRODUCT_SCHEMA": {
+    "type": "object",
+    "properties": {
+      "cat": { "type": "string" },
+      "desc": { "type": "string" },
+      "id": { "type": "number" },
+      "img": { "type": "string" },
+      "price": { "type": "number" },
+      "title": { "type": "string" }
+    }
+  }
+}

@@ -1,5 +1,9 @@
 import { expect } from "@playwright/test"
 import Ajv from "ajv"
+import accData from "../data/account.json"
+type EnvName = "stg" | "uat"
+const envName: EnvName = process.env.ENV as EnvName
+const acc = accData[envName]
 const ajv = new Ajv()
 export default class HelpersApi {
   // Send generic request with methods: GET, POST, DELETE
@@ -31,6 +35,23 @@ export default class HelpersApi {
     }
 
     return response
+  }
+
+  async getToken(request: any) {
+    const payload = {
+      username: acc.username,
+      password: Buffer.from(acc.password).toString("base64"),
+    }
+    const endPoint = "/login"
+    const info = await this.handleApi(
+      request,
+      "POST",
+      endPoint,
+      {}, //header
+      payload, //payload
+      { status: 200 }
+    )
+    return await info.replace("Auth_token: ", "")
   }
 
   // Generic API handlers

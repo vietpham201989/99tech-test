@@ -7,6 +7,10 @@ import { CartFlow } from "../../pageObjects/flow/cartFlow"
 import { AccountPage } from "../../pageObjects/accountPage"
 import { HeaderMenu, IconTable } from "../../helpers/constants"
 import ui from "../../data/e2e/ui_data.json"
+import accData from "../../data/account.json"
+type EnvName = "stg" | "uat"
+const envName: EnvName = process.env.ENV as EnvName
+const acc = accData[envName]
 
 const alert = ui.alert
 
@@ -27,7 +31,7 @@ test.describe("Cart Tests", { tag: ["@e2e", "@regression", "@login"] }, () => {
     accPage = new AccountPage(page)
     await comPage.openLoginPage()
     await accPage.openLoginModal()
-    await accPage.login(process.env.USERNAME!, process.env.PASSWORD!)
+    await accPage.login(acc.username, acc.password)
   })
 
   test("Add product to cart", { tag: ["@loginSuccess"] }, async ({ page }) => {

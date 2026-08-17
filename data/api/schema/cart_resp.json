@@ -1,0 +1,18 @@
+{
+  "VIEWCART_SCHEMA": {
+    "type": "object",
+    "properties": {
+      "Items": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "cookie": { "type": "string" },
+            "id": { "type": "string" },
+            "prod_id": { "type": "number" }
+          }
+        }
+      }
+    }
+  }
+}

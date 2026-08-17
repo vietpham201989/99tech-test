@@ -3,9 +3,9 @@
   "tasks": [
     //ui_tests
     {
-      "label": "Install library of ui",
+      "label": "Install library",
       "type": "shell",
-      "command": "sudo npm install && sudo npm ci && npx playwright install --with-deps",
+      "command": "if [ \"$(uname)\" = \"Darwin\" ]; then sudo npm install && sudo npm ci && npx playwright install --with-deps; else npm install && npm ci && npx playwright install; fi",
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -31,9 +31,14 @@
       }
     },
     {
-      "label": "View report of ui_tests",
+      "label": "Run test cases of api",
       "type": "shell",
-      "command": "allure generate --single-file allure-results --clean && open allure-report/index.html"
+      "command": "RUNNING_ENV=${input:env_ui} npx playwright test --config=playwright.api.config.ts --workers=1  ${input:ui_test_file_api}"
+    },
+    {
+      "label": "View allure report",
+      "type": "shell",
+      "command": "npx allure generate allure-results -o allure-report && npx allure open allure-report"
     }
   ],
   "inputs": [
@@ -49,7 +54,13 @@
       "id": "ui_test_file",
       "type": "promptString",
       "description": "Enter the test file(s) to run or tags. Example: tests/e2e/*.spec.ts --grep '@regression'",
-      "default": "tests/**/*.spec.ts --grep '@smoke'"
+      "default": "tests/e2e/*.spec.ts --grep '@regression'"
+    },
+    {
+      "id": "ui_test_file_api",
+      "type": "promptString",
+      "description": "Enter the test file(s) to run or tags. Example: tests/api/*.spec.ts --grep '@regression'",
+      "default": "tests/api/*.spec.ts --grep '@regression'"
     }
   ]
 }

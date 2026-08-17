@@ -2,12 +2,11 @@ import { test, expect } from "../fixtures"
 import { ComPage } from "../../pageObjects/comPage"
 import { AccountPage } from "../../pageObjects/accountPage"
 import ui from "../../data/e2e/ui_data.json"
-
+import accData from "../../data/account.json"
+type EnvName = "stg" | "uat"
+const envName: EnvName = process.env.ENV as EnvName
+const acc = accData[envName]
 const alert = ui.alert
-const acc = {
-  user: process.env.USERNAME!,
-  pass: process.env.PASSWORD!,
-}
 test.describe(
   "Login Page Tests",
   { tag: ["@e2e", "@regression", "@login"] },
@@ -27,9 +26,11 @@ test.describe(
       { tag: ["@loginSuccess"] },
       async () => {
         await accPage.openLoginModal()
-        await accPage.login(acc.user, acc.pass)
+        await accPage.login(acc.password, acc.password)
         await accPage.delay(3000)
-        await expect(await accPage.verifyUserLoggedIn(acc.user)).toBeTruthy()
+        await expect(
+          await accPage.verifyUserLoggedIn(acc.username)
+        ).toBeTruthy()
       }
     )
   }

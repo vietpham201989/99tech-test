@@ -15,4 +15,24 @@ export default class ProductsApi extends HelpersApi {
       expectedResponse
     )
   }
+  // POST: /view
+  async postViewProduct(
+    request: any,
+    id: string,
+    expectedResponse: any
+  ): Promise<any> {
+    let header = {}
+    const endPoint = "/view"
+    const payload = {
+      id: id,
+    }
+    return await this.handleApi(
+      request,
+      "POST",
+      endPoint,
+      header, //header
+      payload, //payload
+      expectedResponse
+    )
+  }
 }

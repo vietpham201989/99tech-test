@@ -6,6 +6,10 @@ import * as util from "../../helpers/utilities"
 import { AccountPage } from "../../pageObjects/accountPage"
 import { HeaderMenu, OrdersInfo } from "../../helpers/constants"
 import ui from "../../data/e2e/ui_data.json"
+import accData from "../../data/account.json"
+type EnvName = "stg" | "uat"
+const envName: EnvName = process.env.ENV as EnvName
+const acc = accData[envName]
 
 const alert = ui.alert
 const data: OrdersInfo = {
@@ -30,7 +34,7 @@ test.describe("Orders", { tag: ["@e2e", "@regression", "@login"] }, () => {
     accPage = new AccountPage(page)
     await comPage.openLoginPage()
     await accPage.openLoginModal()
-    await accPage.login(process.env.USERNAME!, process.env.PASSWORD!)
+    await accPage.login(acc.username, acc.password)
     await comPage.selectHeaderMenu(HeaderMenu.cart)
     await cartFlow.addCartIfNotExist(page)
     await comPage.selectHeaderMenu(HeaderMenu.cart)
