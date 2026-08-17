@@ -1,0 +1,8 @@
+{
+    "stg": {
+        "API_URL": "https://api.demoblaze.com"
+    },
+    "uat": {
+        "API_URL": "https://api.demoblaze.com"
+    }
+}

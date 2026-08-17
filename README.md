@@ -4,14 +4,18 @@ A Playwright-based test automation framework with multi-environment support, com
 
 ## Project Structure
 
+
 ```
 tech99/
 ├── .github/
 │   └── workflows/
-│       └── playwright-e2e.yml    # GitHub Actions workflow for CI/CD
+│       ├── playwright-e2e.yml    # Playwright E2E workflow
+│       ├── playwright-api.yml    # Playwright API workflow
+│       └── performance.yml       # K6 Performance workflow
 ├── pageObjects/                  # Page Object Model classes
 │   ├── basePage.ts              # Base page with common actions
-│   └── indexPage.ts             # Home page object
+│   ├── indexPage.ts             # Home page object
+│   └── ...                      # Other page objects
 ├── tests/
 │   ├── api/                     # API tests
 │   └── e2e/                     # End-to-end tests
@@ -19,12 +23,86 @@ tech99/
 ├── allure-results/              # Allure test reports (generated)
 ├── playwright-report/           # Playwright HTML reports (generated)
 ├── test-results/                # Test execution results (generated)
+├── performance-tests/           # K6 performance tests
+│   ├── login-test.js            # Example K6 test
+│   ├── k6-results.json          # K6 test results (generated)
+│   └── package.json             # K6 dependencies and scripts
 ├── .env.stg                     # Staging environment variables
 ├── .env.uat                     # UAT environment variables
 ├── playwright.config.ts         # Playwright configuration
 ├── package.json                 # Project dependencies and scripts
-└── eslint.config.mjs            # ESLint configuration
+├── eslint.config.mjs            # ESLint configuration
+└── helpers/                     # Utility and constants files
+  ├── constants.ts
+  └── utilities.ts
 ```
+# K6 Performance Tests
+
+K6 is used for API and performance testing. K6 scripts are located in the `performance-tests/` directory.
+
+### Example K6 Test: `performance-tests/login-test.js`
+
+This script performs a login load test against the API:
+
+```js
+import http from "k6/http"
+import { check, sleep } from "k6"
+import encoding from "k6/encoding"
+const accData = JSON.parse(open("../data/account.json"))
+const configData = JSON.parse(open("../data/api/config.json"))
+const env = __ENV.ENV || 'stg';
+
+export const options = {
+  scenarios: {
+    user_login_load: {
+      executor: 'ramping-arrival-rate',
+      startRate: 1,
+      timeUnit: '1s',
+      preAllocatedVUs: 5,
+      maxVUs: 50,
+      stages: [
+        { duration: '5s', target: 50 },
+        { duration: '20', target: 50 },
+      ],
+    },
+  },
+}
+
+const BASE_API_URL = configData[env].API_URL
+
+export default function () {
+  let user = accData[env].username
+  let password = accData[env].password
+  const pass = encoding.b64encode(password)
+  const res = http.post(
+    `${BASE_API_URL}/login`,
+    JSON.stringify({ username: user, password: pass }),
+    { headers: { "Content-Type": "application/json" } }
+  )
+  check(res, {
+    "status 200": (r) => r.status === 200,
+    "token exists": (r) => !!res.body.startsWith("\"Auth_token:"),
+    "response time < 500ms": (r) => r.timings.duration < 500,
+  })
+  sleep(1)
+}
+```
+
+### Running K6 Performance Tests
+
+From the `performance-tests/` directory:
+
+```bash
+# Run the login performance test and output results to k6-results.json
+npm run test:performance -- -e ENV:<environment> login-test.js
+
+# Run a specific test file
+npm run test:performance:ci:file -- -e ENV:<environment> <your-test-file.js>
+```
+
+Test results are saved to `performance-tests/k6-results.json`.
+
+For more information, see the [K6 documentation](https://k6.io/docs/).
 
 ## Environment Configuration
 

@@ -1,0 +1,60 @@
+name: Performance Tests
+on:
+  push:
+    branches: [main]
+    paths:
+      - performance-tests/**
+      - .github/workflows/performance.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - performance-tests/**
+      - .github/workflows/performance.yml
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to run tests against"
+        required: true
+        type: choice
+        options:
+          - stg
+          - uat
+        default: stg
+      file:
+        description: "Performance test file to run"
+        required: true
+        type: choice
+        options:
+          - "login-tests.js"
+        default: "login-tests.js"
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: |
+          cd performance-tests
+          npm install
+      - name: Install k6
+        run: |
+          sudo gpg -k || sudo apt install gnupg -y
+          curl -s https://dl.k6.io/key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/k6-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt update
+          sudo apt install k6 -y
+      - name: Run Performance tests
+        run: |
+          cd performance-tests
+          npm run test:performance:ci -- -e ENV=${{ github.event.inputs.environment || 'stg' }} ${{ github.event.inputs.file || 'login-tests.js' }}
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: k6-results
+          path: performance-tests/k6-results.json
+          retention-days: 30
