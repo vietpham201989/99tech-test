@@ -20,6 +20,7 @@ export class IndexPage extends BasePage {
   async openLoginModal() {
     await this.click(this.loginLink)
     await this.waitForSelectorToBeVisible(this.usernameInput)
+    await this.waitForPageLoaded()
     return this
   }
 
