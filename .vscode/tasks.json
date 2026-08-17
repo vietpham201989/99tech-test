@@ -39,6 +39,12 @@
       "label": "View allure report",
       "type": "shell",
       "command": "npx allure generate allure-results -o allure-report && npx allure open allure-report"
+    },
+    {
+      "label": "Run under-tests of K6",
+      "type": "shell",
+      "command": "export $(grep -v '^#' .env${input:env_ui} | xargs) && k6 run ${input:ui_test_file_under_tests}",
+      "problemMatcher": []
     }
   ],
   "inputs": [
@@ -61,6 +67,12 @@
       "type": "promptString",
       "description": "Enter the test file(s) to run or tags. Example: tests/api/*.spec.ts --grep '@regression'",
       "default": "tests/api/*.spec.ts --grep '@regression'"
+    },
+    {
+      "id": "ui_test_file_under_tests",
+      "type": "promptString",
+      "description": "Enter the test file(s) to run or tags. Example: under-tests/*.js",
+      "default": "under-tests/*.js"
     }
   ]
 }
