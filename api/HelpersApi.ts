@@ -111,6 +111,7 @@ export default class HelpersApi {
     try {
       result = await response.json()
     } catch (error) {
+      console.error(`Error parsing JSON response: ${error}`)
       result = await response.text()
     }
     return result

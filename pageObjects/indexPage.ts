@@ -28,8 +28,8 @@ export class IndexPage extends BasePage {
 
   async getProducts(timeout: number = 3000) {
     await this.delay(timeout)
-    const arr = new Array()
-    let count = await this.count(this.page.locator(this.productRow))
+    const arr = []
+    const count = await this.count(this.page.locator(this.productRow))
     for (let i = 1; i <= count; i++) {
       const imgLoc = String.format(this.productImg, i)
       const nameLoc = String.format(this.productName, i)

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 //https://github.com/grafana/k6/releases 
 import http from "k6/http"
 import { check, sleep } from "k6"

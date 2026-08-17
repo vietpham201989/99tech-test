@@ -1,12 +1,7 @@
 import { Locator, Page, expect } from "@playwright/test"
 import { BasePage } from "./basePage"
 import { String } from "typescript-string-operations"
-import {
-  HeaderMenu,
-  CategoriesMenu,
-  PreNext,
-  IconTable,
-} from "../helpers/constants"
+import { HeaderMenu, CategoriesMenu, PreNext, IconTable } from "../helpers/constants"
 
 export class ComPage extends BasePage {
   readonly menuHeader: string
@@ -71,12 +66,12 @@ export class ComPage extends BasePage {
 
   async getTable(limit?: number, timeout: number = 5000) {
     await this.delay(timeout)
-    const header = new Array()
-    const body = new Array()
+    const header = []
+    const body = []
     const headerCount = await this.count(this.page.locator(this.headerCell))
     for (let i = 1; i <= headerCount; i++) {
       const loc = `${this.headerCell}[${i}]`
-      let text = await this.getText(loc)
+      const text = await this.getText(loc)
       header.push(text)
     }
     let rowCount = await this.count(this.page.locator(this.bodyRow))
@@ -86,7 +81,7 @@ export class ComPage extends BasePage {
     for (let i = 1; i <= rowCount; i++) {
       const cellsLoc = `${this.bodyRow}[${i}]/td`
       const cellsCount = await this.count(this.page.locator(cellsLoc))
-      const rowArr = new Array()
+      const rowArr = []
       for (let j = 1; j <= cellsCount; j++) {
         const textLoc = `${cellsLoc}[${j}]`
         let text: any = ""
@@ -112,7 +107,7 @@ export class ComPage extends BasePage {
       const formattedData: T[] = body.map((row) => {
         const rowData: any = {} as T
         header.forEach((column, index) => {
-          rowData[column] = row[index]
+          rowData[column??""] = row[index]
         })
         return rowData
       })
@@ -143,6 +138,7 @@ export class ComPage extends BasePage {
       await this.click(icon)
       return true
     } catch (error) {
+      console.error(`Error clicking icon in table: ${error}`)
       return false
     }
   }
@@ -160,12 +156,12 @@ export class ComPage extends BasePage {
     contains: boolean = false,
     timeout: number = 10000
   ) {
-    let loc = await this.getLocText(text, contains)
+    const loc = await this.getLocText(text, contains)
     return await this.isDisplayed(loc, timeout)
   }
 
   async tapText(text: string, contains: boolean = false) {
-    let loc = await this.getLocText(text, contains)
+    const loc = await this.getLocText(text, contains)
     return await this.click(loc)
   }
 

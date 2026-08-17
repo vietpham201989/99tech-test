@@ -1,6 +1,3 @@
-//env
-require("dotenv").config()
-const env = process.env.ENV ? process.env.ENV : "STAGING"
 //library
 import { test } from "@playwright/test"
 //class
@@ -15,7 +12,7 @@ const productApi = new ProductsApi()
 
 test.describe("Product", () => {
   test(
-    "Verify getting products successfully",
+    "[GET] /entries - Verify get products successfully",
     { tag: ["@api", "@regression"] },
     async ({ request }) => {
       const info = await productApi.getProduct(
@@ -30,7 +27,7 @@ test.describe("Product", () => {
   )
 
   test(
-    "Verify view product successfully",
+    "[POS] /view - Verify view product successfully",
     { tag: ["@api", "@regression"] },
     async ({ request }) => {
       const products = await productApi.getProduct(request, { status: 200 })

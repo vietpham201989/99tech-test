@@ -3,12 +3,13 @@ import HelpersApi from "./HelpersApi"
 
 export default class AccountApi extends HelpersApi {
   // POST: /check
+   
   async postCheck(
     request: any,
     token: string,
     expectedResponse: any
   ): Promise<any> {
-    let header = {}
+    const header = {}
     const payload = {
       token: token,
     }
@@ -30,7 +31,7 @@ export default class AccountApi extends HelpersApi {
     pwd: string,
     expectedResponse: any
   ): Promise<any> {
-    let header = {}
+    const header = {}
     console.log()
 
     const payload = {

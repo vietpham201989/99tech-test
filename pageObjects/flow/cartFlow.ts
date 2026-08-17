@@ -1,13 +1,13 @@
 import { ComPage } from "../../pageObjects/comPage"
 import { IndexPage } from "../../pageObjects/indexPage"
 import { ProductPage } from "../../pageObjects/productPage"
-import { CartPage } from "../../pageObjects/cartPage"
 import { HeaderMenu, IconTable } from "../../helpers/constants"
+// import { CartPage } from "../../pageObjects/cartPage"
 
 let indexPage: IndexPage
 let comPage: ComPage
 let productPage: ProductPage
-let cartPage: CartPage
+// let cartPage: CartPage
 
 export class CartFlow {
   protected page: any
@@ -16,11 +16,11 @@ export class CartFlow {
     indexPage = new IndexPage(page)
     comPage = new ComPage(page)
     productPage = new ProductPage(page)
-    cartPage = new CartPage(page)
+    // cartPage = new CartPage(page)
   }
 
   async deleteAllCart() {
-    let count = await comPage.countTable()
+    const count = await comPage.countTable()
     if (count > 0) {
       for (let i = 0; i < count; i++) {
         await comPage.clickIconInTable("x", IconTable.delete, 1)
@@ -30,7 +30,7 @@ export class CartFlow {
   }
 
   async addCartIfNotExist(page: any) {
-    let count = await comPage.countTable()
+    const count = await comPage.countTable()
     if (count == 0) {
       await this.addCart(page)
     }

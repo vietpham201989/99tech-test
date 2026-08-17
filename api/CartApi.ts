@@ -8,7 +8,7 @@ export default class CartApi extends HelpersApi {
     cookie: string,
     expectedResponse: any
   ): Promise<any> {
-    let header = {}
+    const header = {}
     const payload = {
       cookie: cookie,
       flag: true,

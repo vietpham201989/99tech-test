@@ -12,6 +12,10 @@ export class BasePage {
     return this
   }
 
+  getPage() {
+    return this.page
+  }
+
   getLoc(selector: string | Locator) {
     return typeof selector === "string" ? this.page.locator(selector) : selector
   }
@@ -28,7 +32,7 @@ export class BasePage {
     })
   }
   async delay(ms: number = 2000) {
-    return new Promise((resolve) => setTimeout(resolve, ms))
+    return await this.waitForTimeout(ms)
   }
 
   async waitForTimeout(timeout: number) {

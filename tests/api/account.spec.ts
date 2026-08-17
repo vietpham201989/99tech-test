@@ -1,6 +1,3 @@
-//env
-require("dotenv").config()
-const env = process.env.ENV ? process.env.ENV : "STAGING"
 //library
 import { test } from "@playwright/test"
 //class
@@ -14,7 +11,7 @@ const acc = accData[envName]
 const accApi = new AccountApi()
 
 test.describe("Account", () => {
-  test("Login", { tag: ["@api", "@regression"] }, async ({ request }) => {
+  test("[POST] /login - Login successfully", { tag: ["@api", "@regression"] }, async ({ request }) => {
     const info = await accApi.postLogin(
       request,
       acc.username,
@@ -25,7 +22,7 @@ test.describe("Account", () => {
   })
   
   test(
-    "Check account information",
+    "[POST] /check - Check account information",
     { tag: ["@api", "@regression"] },
     async ({ request }) => {
       const token = await accApi.getToken(request)

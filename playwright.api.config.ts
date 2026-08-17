@@ -1,5 +1,6 @@
 //env
-import * as dotenv from "dotenv"
+import dotenv from "dotenv"
+dotenv.config()
 
 const env = process.env.RUNNING_ENV || ".local"
 import { defineConfig } from "@playwright/test"

@@ -1,49 +1,27 @@
 import { test, expect } from "../fixtures"
-import { ComPage } from "../../pageObjects/comPage"
-import { CartPage } from "../../pageObjects/cartPage"
-import { CartFlow } from "../../pageObjects/flow/cartFlow"
 import * as util from "../../helpers/utilities"
-import { AccountPage } from "../../pageObjects/accountPage"
 import { HeaderMenu, OrdersInfo } from "../../helpers/constants"
-import ui from "../../data/e2e/ui_data.json"
 import accData from "../../data/account.json"
 type EnvName = "stg" | "uat"
 const envName: EnvName = process.env.ENV as EnvName
 const acc = accData[envName]
 
-const alert = ui.alert
-const data: OrdersInfo = {
-  name: "Nguyen Van A",
-  country: "Vietname",
-  city: "City",
-  creditCard: "880000",
-  month: "1",
-  year: "2026",
-}
+test.describe("Orders", { tag: ["@e2e", "@regression", "@orders"] }, () => {
 
-test.describe("Orders", { tag: ["@e2e", "@regression", "@login"] }, () => {
-  let comPage: ComPage
-  let cartPage: CartPage
-  let cartFlow: CartFlow
-  let accPage: AccountPage
-
-  test.beforeEach(async ({ page }) => {
-    comPage = new ComPage(page)
-    cartPage = new CartPage(page)
-    cartFlow = new CartFlow(page)
-    accPage = new AccountPage(page)
+  test.beforeEach(async ({ comPage, accountPage, cartFlow }) => {
     await comPage.openLoginPage()
-    await accPage.openLoginModal()
-    await accPage.login(acc.username, acc.password)
+    await accountPage.openLoginModal()
+    await accountPage.login(acc.username, acc.password)
     await comPage.selectHeaderMenu(HeaderMenu.cart)
-    await cartFlow.addCartIfNotExist(page)
+    await cartFlow.addCartIfNotExist(comPage.getPage())
     await comPage.selectHeaderMenu(HeaderMenu.cart)
   })
 
   test(
     "Place order with valid information",
-    { tag: ["@loginSuccess"] },
-    async () => {
+    { tag: ["@orders01"] },
+    async ({ comPage, cartPage }) => {
+      const data: OrdersInfo = util.generateFakeOrdersInfo()
       const table = await comPage.formatTable()
       const total = util.priceTotalCart(table)
       await cartPage.tapPlaceOrderBtn()

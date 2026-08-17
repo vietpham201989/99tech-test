@@ -4,7 +4,7 @@ import HelpersApi from "./HelpersApi"
 export default class ProductsApi extends HelpersApi {
   // GET: /entries
   async getProduct(request: any, expectedResponse: any): Promise<any> {
-    let header = {}
+    const header = {}
     const endPoint = "/entries"
     return await this.handleApi(
       request,
@@ -21,7 +21,7 @@ export default class ProductsApi extends HelpersApi {
     id: string,
     expectedResponse: any
   ): Promise<any> {
-    let header = {}
+    const header = {}
     const endPoint = "/view"
     const payload = {
       id: id,
