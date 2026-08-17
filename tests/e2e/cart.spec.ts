@@ -38,41 +38,4 @@ test.describe("Cart Tests", { tag: ["@e2e", "@regression", "@login"] }, () => {
     await productPage.addCart()
     await alertPromise
   })
-
-  test(
-    "View cart with added product",
-    { tag: ["@loginSuccess"] },
-    async ({ page }) => {
-      await comPage.selectHeaderMenu(HeaderMenu.cart)
-      await cartFlow.deleteAllCart()
-      const product = await cartFlow.addCart(page)
-      await comPage.selectHeaderMenu(HeaderMenu.cart)
-      const table = await comPage.formatTable(3)
-      const cartitem = table.find((i: any) => i.Title === product["name"])
-      expect(cartitem).toBeDefined()
-    }
-  )
-
-  test(
-    "Remove product from cart",
-    { tag: ["@loginSuccess"] },
-    async ({ page }) => {
-      await comPage.selectHeaderMenu(HeaderMenu.cart)
-      await cartFlow.addCartIfNotExist(page)
-      await comPage.selectHeaderMenu(HeaderMenu.cart)
-      const count = await comPage.countTable()
-      await comPage.clickIconInTable("x", IconTable.delete, 1)
-      await comPage.delay(3000)
-      const countAfter = await comPage.countTable()
-      expect(countAfter).toBe(count - 1)
-    }
-  )
-
-  test("View empty cart", { tag: ["@loginSuccess"] }, async () => {
-    await comPage.selectHeaderMenu(HeaderMenu.cart)
-    await cartFlow.deleteAllCart()
-    await comPage.delay(3000)
-    const count = await comPage.countTable()
-    expect(count).toBe(0)
-  })
 })

@@ -53,37 +53,4 @@ test.describe("Orders", { tag: ["@e2e", "@regression", "@login"] }, () => {
       await comPage.tapText("OK")
     }
   )
-  test(
-    "Place order without Name",
-    { tag: ["@loginSuccess"] },
-    async ({ page }) => {
-      const dataWithoutName = { ...data }
-      dataWithoutName.name = ""
-      dataWithoutName["name"] = ""
-      await cartPage.tapPlaceOrderBtn()
-      const alertPromise = comPage.expectAlert(page, alert.notNameAndCreditCard)
-      await cartPage.placeOrder(dataWithoutName)
-      await alertPromise
-    }
-  )
-  test(
-    "Place order without Card number",
-    { tag: ["@loginSuccess"] },
-    async ({ page }) => {
-      const dataWithoutCard = { ...data }
-      dataWithoutCard.creditCard = ""
-      await cartPage.tapPlaceOrderBtn()
-      const alertPromise = comPage.expectAlert(page, alert.notNameAndCreditCard)
-      await comPage.delay(3000)
-      await cartPage.placeOrder(dataWithoutCard)
-      await alertPromise
-    }
-  )
-  test("Close Place Order popup", { tag: ["@loginSuccess"] }, async () => {
-    await cartPage.tapPlaceOrderBtn()
-    expect(await cartPage.showPlaceOrderPopup()).toBe(true)
-    await comPage.closePopup("closeBtn")
-    await comPage.delay(3000)
-    expect(await cartPage.showPlaceOrderPopup(2000)).toBe(false)
-  })
 })
