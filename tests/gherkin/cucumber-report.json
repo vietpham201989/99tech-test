@@ -1,0 +1,515 @@
+[
+  {
+    "description": "  As a system\n  I want to test account API endpoints\n  So that I can verify authentication functionality",
+    "elements": [
+      {
+        "description": "",
+        "id": "account-api;login-successfully-via-api",
+        "keyword": "Scenario",
+        "line": 7,
+        "name": "Login successfully via API",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 2827434685
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 8,
+            "name": "I send POST request to \"/login\" with username and password",
+            "match": {
+              "location": "tests/gherkin/step_definitions/api/common.steps.ts:119"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 665701871
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 9,
+            "name": "I should receive status code 200",
+            "match": {
+              "location": "tests/gherkin/step_definitions/api/common.steps.ts:170"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 376280
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 10,
+            "name": "I should see the login information",
+            "match": {
+              "location": "tests/gherkin/step_definitions/api/common.steps.ts:175"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 552644
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 45144858
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@api",
+            "line": 1
+          },
+          {
+            "name": "@regression",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "account-api;check-account-information-via-api",
+        "keyword": "Scenario",
+        "line": 12,
+        "name": "Check account information via API",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 228108343
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 13,
+            "name": "I have a valid authentication token",
+            "match": {
+              "location": "tests/gherkin/step_definitions/api/common.steps.ts:112"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 307345025
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 14,
+            "name": "I send POST request to \"/check\" with the token",
+            "match": {
+              "location": "tests/gherkin/step_definitions/api/common.steps.ts:132"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 254702800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 15,
+            "name": "I should receive status code 200",
+            "match": {
+              "location": "tests/gherkin/step_definitions/api/common.steps.ts:170"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 406635
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "I should see the account information",
+            "match": {
+              "location": "tests/gherkin/step_definitions/api/common.steps.ts:179"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 401228
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 25552963
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@api",
+            "line": 1
+          },
+          {
+            "name": "@regression",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "id": "account-api",
+    "line": 2,
+    "keyword": "Feature",
+    "name": "Account API",
+    "tags": [
+      {
+        "name": "@api",
+        "line": 1
+      },
+      {
+        "name": "@regression",
+        "line": 1
+      }
+    ],
+    "uri": "tests/gherkin/features/api/account.feature"
+  },
+  {
+    "description": "  As a system\n  I want to test cart API endpoints\n  So that I can verify cart functionality",
+    "elements": [
+      {
+        "description": "",
+        "id": "cart-api;verify-view-cart-of-user-successfully",
+        "keyword": "Scenario",
+        "line": 7,
+        "name": "Verify view cart of user successfully",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 239934994
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "I have a valid authentication token",
+            "match": {
+              "location": "tests/gherkin/step_definitions/api/common.steps.ts:112"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 299989738
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 9,
+            "name": "I send POST request to \"/viewcart\" with the token",
+            "match": {
+              "location": "tests/gherkin/step_definitions/api/common.steps.ts:132"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 321820197
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 10,
+            "name": "I should receive status code 200",
+            "match": {
+              "location": "tests/gherkin/step_definitions/api/common.steps.ts:170"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 287911
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 11,
+            "name": "I should see the cart information",
+            "match": {
+              "location": "tests/gherkin/step_definitions/api/common.steps.ts:183"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 236968
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 12,
+            "name": "the response should match the view cart schema",
+            "match": {
+              "location": "tests/gherkin/step_definitions/api/common.steps.ts:187"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 230802
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 25200327
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@api",
+            "line": 1
+          },
+          {
+            "name": "@regression",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "id": "cart-api",
+    "line": 2,
+    "keyword": "Feature",
+    "name": "Cart API",
+    "tags": [
+      {
+        "name": "@api",
+        "line": 1
+      },
+      {
+        "name": "@regression",
+        "line": 1
+      }
+    ],
+    "uri": "tests/gherkin/features/api/cart.feature"
+  },
+  {
+    "description": "  As a system\n  I want to test products API endpoints\n  So that I can verify product functionality",
+    "elements": [
+      {
+        "description": "",
+        "id": "products-api;verify-get-products-successfully",
+        "keyword": "Scenario",
+        "line": 7,
+        "name": "Verify get products successfully",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 220091199
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 8,
+            "name": "I send GET request to \"/entries\"",
+            "match": {
+              "location": "tests/gherkin/step_definitions/api/common.steps.ts:146"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 283379405
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 9,
+            "name": "I should receive status code 200",
+            "match": {
+              "location": "tests/gherkin/step_definitions/api/common.steps.ts:170"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 289596
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 10,
+            "name": "I should see the products information",
+            "match": {
+              "location": "tests/gherkin/step_definitions/api/common.steps.ts:192"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 278449
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 11,
+            "name": "the response should match the products schema",
+            "match": {
+              "location": "tests/gherkin/step_definitions/api/common.steps.ts:197"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 268933
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 36389806
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@api",
+            "line": 1
+          },
+          {
+            "name": "@regression",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "products-api;verify-view-product-successfully",
+        "keyword": "Scenario",
+        "line": 13,
+        "name": "Verify view product successfully",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 227589751
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 14,
+            "name": "I have retrieved the list of products",
+            "match": {
+              "location": "tests/gherkin/step_definitions/api/common.steps.ts:211"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 275099183
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 15,
+            "name": "I send POST request to \"/view\" with the first product ID",
+            "match": {
+              "location": "tests/gherkin/step_definitions/api/common.steps.ts:156"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 266364287
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 16,
+            "name": "I should receive status code 200",
+            "match": {
+              "location": "tests/gherkin/step_definitions/api/common.steps.ts:170"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 189604
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "I should see the product information",
+            "match": {
+              "location": "tests/gherkin/step_definitions/api/common.steps.ts:202"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 169832
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 18,
+            "name": "the response should match the product schema",
+            "match": {
+              "location": "tests/gherkin/step_definitions/api/common.steps.ts:206"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 166384
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 30367353
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@api",
+            "line": 1
+          },
+          {
+            "name": "@regression",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "id": "products-api",
+    "line": 2,
+    "keyword": "Feature",
+    "name": "Products API",
+    "tags": [
+      {
+        "name": "@api",
+        "line": 1
+      },
+      {
+        "name": "@regression",
+        "line": 1
+      }
+    ],
+    "uri": "tests/gherkin/features/api/products.feature"
+  }
+]
