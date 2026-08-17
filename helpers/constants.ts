@@ -9,7 +9,7 @@ export enum HeaderMenu {
 }
 
 export enum CategoriesMenu {
-  phone = "Phone",
+  phone = "Phones",
   laptops = "Laptops",
   monitors = "Monitors",
 }

@@ -19,6 +19,7 @@ test.describe(
       comPage = new ComPage(page)
       accPage = new AccountPage(page)
       await comPage.openLoginPage()
+      await comPage.delay(3000)
     })
 
     test(
@@ -27,6 +28,7 @@ test.describe(
       async () => {
         await accPage.openLoginModal()
         await accPage.login(acc.user, acc.pass)
+        await accPage.delay(3000)
         await expect(await accPage.verifyUserLoggedIn(acc.user)).toBeTruthy()
       }
     )
