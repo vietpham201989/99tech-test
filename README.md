@@ -230,7 +230,7 @@ npm run lint:fix                 # Fix linting
 
 - **Playwright HTML Report**: `playwright-report/index.html`
 - **Allure Report**: `allure-results/` (view with `npm run serve-report`)
-- **Cucumber Reports**: `tests/gherkin/cucumber-report.html` and `.json`
+- **Cucumber Reports**: `tests/gherkin/reports/cucumber-report.html` and `.json`
 - **Screenshots**: `test-results/gherkin-screenshots/` (on failure)
 
 ## GitHub Actions CI/CD
