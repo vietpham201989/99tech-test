@@ -141,3 +141,7 @@ test-results
 allure-results
 playwright-report
 allure-report
+# Gherkin
+tests/gherkin/cucumber-report.json
+tests/gherkin/cucumber-report.html
+tests/gherkin/cucumber-messages.ndjson

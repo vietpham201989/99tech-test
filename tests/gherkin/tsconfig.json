@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "module": "commonjs",
+    "target": "ES2020",
+    "moduleResolution": "node",
+    "types": ["node", "@cucumber/cucumber"],
+    "baseUrl": "../..",
+    "skipLibCheck": true,
+    "noEmit": true
+  },
+  "ts-node": {
+    "transpileOnly": true,
+    "files": true
+  },
+  "include": [
+    "step_definitions/**/*",
+    "features/**/*"
+  ]
+}
+

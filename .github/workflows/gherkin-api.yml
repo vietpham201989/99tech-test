@@ -1,0 +1,119 @@
+name: Gherkin Tests - API
+on:
+  # push:
+  #   branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to run tests against"
+        required: true
+        type: choice
+        options:
+          - stg
+          - uat
+        default: stg
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    env:
+      ENV: ${{ github.event.inputs.environment || 'stg' }}
+      RUNNING_ENV: ".${{ github.event.inputs.environment || 'stg' }}"
+      CI: true
+      GITHUB_ACTIONS: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+      - name: Create report directories
+        run: |
+          mkdir -p tests/gherkin
+          mkdir -p allure-results
+      - name: Run Gherkin API tests
+        run: npm run test:gherkin:api
+      - name: Upload Cucumber Report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: cucumber-report-api
+          path: tests/gherkin/cucumber-report.html
+          retention-days: 10
+          if-no-files-found: ignore
+      - name: Upload Cucumber JSON
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: cucumber-json-api
+          path: tests/gherkin/cucumber-report.json
+          retention-days: 10
+          if-no-files-found: ignore
+      - name: Upload Allure Results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results/
+          retention-days: 10
+          if-no-files-found: ignore
+      - name: Setup Java for Allure
+        if: ${{ !cancelled() }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+      - name: Install Allure CLI
+        if: ${{ !cancelled() }}
+        run: |
+          npm install -g allure-commandline || echo "Failed to install allure-commandline, trying alternative method"
+          which allure || npm install -g @allure/cli || echo "Allure CLI installation failed"
+      - name: Check Allure Results
+        if: ${{ !cancelled() }}
+        run: |
+          echo "Checking allure-results directory..."
+          if [ -d "allure-results" ]; then
+            echo "allure-results directory exists"
+            echo "Number of files: $(ls -1 allure-results | wc -l)"
+            echo "Files in allure-results:"
+            ls -la allure-results | head -10
+          else
+            echo "allure-results directory does not exist"
+          fi
+      - name: Generate Allure Report (Single HTML)
+        if: ${{ !cancelled() }}
+        run: |
+          if [ -d "allure-results" ] && [ "$(ls -A allure-results 2>/dev/null)" ]; then
+            echo "Generating Allure single HTML report..."
+            echo "Allure CLI version:"
+            npx allure --version || allure --version || echo "Cannot get Allure version"
+            echo "Generating single-file report from allure-results..."
+            npx allure generate allure-results -o allure-report --clean --single-file || allure generate allure-results -o allure-report --clean --single-file || echo "Single-file option not available, generating standard report"
+            if [ $? -eq 0 ] && [ -f "allure-report/index.html" ]; then
+              echo "✅ Allure report generated successfully"
+              echo "Report location: allure-report/index.html"
+              ls -lh allure-report/index.html
+              echo "Checking if it's a single file (should be large if single-file):"
+              du -h allure-report/index.html
+            else
+              echo "❌ Allure report generation failed"
+              echo "Checking allure-report directory:"
+              ls -la allure-report/ 2>/dev/null || echo "allure-report directory does not exist"
+            fi
+          else
+            echo "⚠️ No allure-results found or directory is empty, skipping report generation"
+          fi
+      - name: Upload Allure Report (Single HTML)
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report-html-api
+          path: allure-report/index.html
+          retention-days: 10
+          if-no-files-found: ignore
+

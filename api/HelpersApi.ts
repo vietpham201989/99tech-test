@@ -2,7 +2,7 @@ import { expect } from "@playwright/test"
 import Ajv from "ajv"
 import accData from "../data/account.json"
 type EnvName = "stg" | "uat"
-const envName: EnvName = process.env.ENV as EnvName
+const envName: EnvName = (process.env.ENV as EnvName) || "stg"
 const acc = accData[envName]
 const ajv = new Ajv()
 export default class HelpersApi {

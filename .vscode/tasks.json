@@ -35,10 +35,75 @@
       "type": "shell",
       "command": "RUNNING_ENV=${input:env_ui} npx playwright test --config=playwright.api.config.ts --workers=1  ${input:ui_test_file_api}"
     },
+    //gherkin_tests
+    {
+      "label": "Run Gherkin E2E tests",
+      "type": "shell",
+      "command": "ENV=${input:env_gherkin} npm run test:gherkin:e2e",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "Run Gherkin E2E tests - Chromium",
+      "type": "shell",
+      "command": "ENV=${input:env_gherkin} BROWSER=chromium npm run test:gherkin:e2e",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "Run Gherkin E2E tests - Firefox",
+      "type": "shell",
+      "command": "ENV=${input:env_gherkin} BROWSER=firefox npm run test:gherkin:e2e",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "Run Gherkin E2E tests - WebKit",
+      "type": "shell",
+      "command": "ENV=${input:env_gherkin} BROWSER=webkit npm run test:gherkin:e2e",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "Run Gherkin API tests",
+      "type": "shell",
+      "command": "ENV=${input:env_gherkin} npm run test:gherkin:api",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "Run all Gherkin tests",
+      "type": "shell",
+      "command": "ENV=${input:env_gherkin} npm run test:gherkin:all",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "Run Gherkin E2E tests by file or tag",
+      "type": "shell",
+      "command": "ENV=${input:env_gherkin} BROWSER=${input:browser_gherkin} npx cucumber-js ${input:gherkin_file_or_tag} --require tests/gherkin/register-ts.js --require tests/gherkin/step_definitions/e2e/hooks.ts --require tests/gherkin/step_definitions/e2e/common.steps.ts --require tests/gherkin/step_definitions/e2e/cart.steps.ts --require tests/gherkin/step_definitions/e2e/orders.steps.ts --format progress-bar --format pretty --format summary --format json:tests/gherkin/cucumber-report.json --format html:tests/gherkin/cucumber-report.html",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "Run Gherkin API tests by file or tag",
+      "type": "shell",
+      "command": "ENV=${input:env_gherkin} npx cucumber-js ${input:gherkin_file_or_tag} --require tests/gherkin/register-ts.js --require tests/gherkin/step_definitions/api/common.steps.ts --format progress-bar --format pretty --format summary --format json:tests/gherkin/cucumber-report.json --format html:tests/gherkin/cucumber-report.html",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
     {
       "label": "View allure report",
       "type": "shell",
-      "command": "npx allure generate allure-results -o allure-report && npx allure open allure-report"
+      "command": "if [ \"$(uname)\" = \"Darwin\" ]; then sudo npm cache clean --force && npx allure generate allure-results -o allure-report && npx allure open allure-report; else npm cache clean --force && npx allure generate allure-results -o allure-report && npx allure open allure-report; fi"
     },
     {
       "label": "Run under-tests of K6",
@@ -73,6 +138,39 @@
       "type": "promptString",
       "description": "Enter the test file(s) to run or tags. Example: under-tests/*.js",
       "default": "under-tests/*.js"
+    },
+    // gherkin_tests
+    {
+      "id": "env_gherkin",
+      "type": "pickString",
+      "description": "Select environment for Gherkin tests",
+      "options": ["stg", "uat"],
+      "default": "stg"
+    },
+    {
+      "id": "gherkin_feature_file",
+      "type": "promptString",
+      "description": "Enter the feature file to run. Example: tests/gherkin/features/e2e/login.feature",
+      "default": "tests/gherkin/features/e2e/login.feature"
+    },
+    {
+      "id": "gherkin_file_or_tag",
+      "type": "promptString",
+      "description": "Enter file path or tag(s). Examples: tests/gherkin/features/e2e/login.feature, --tags @login, --tags '@regression or @login', --tags '@tag1 and @tag2'",
+      "default": "tests/gherkin/features/e2e/login.feature"
+    },
+    {
+      "id": "gherkin_tag",
+      "type": "promptString",
+      "description": "Enter tag(s) to run. Examples: @login, @regression, '@tag1 or @tag2', '@tag1 and @tag2'",
+      "default": "@regression"
+    },
+    {
+      "id": "browser_gherkin",
+      "type": "pickString",
+      "description": "Select browser for Gherkin E2E tests",
+      "options": ["chromium", "firefox", "webkit"],
+      "default": "chromium"
     }
   ]
 }

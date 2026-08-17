@@ -4,43 +4,126 @@ A Playwright-based test automation framework with multi-environment support, com
 
 ## Project Structure
 
-
 ```
 tech99/
-├── .github/
-│   └── workflows/
-│       ├── playwright-e2e.yml    # Playwright E2E workflow
-│       ├── playwright-api.yml    # Playwright API workflow
-│       └── performance.yml       # K6 Performance workflow
-├── pageObjects/                  # Page Object Model classes
-│   ├── basePage.ts              # Base page with common actions
-│   ├── indexPage.ts             # Home page object
-│   └── ...                      # Other page objects
+├── .github/workflows/          # GitHub Actions workflows
+├── api/                       # API classes (AccountApi, CartApi, etc.)
+├── data/                      # Test data (account.json, config.json, etc.)
+├── helpers/                   # Utility functions and constants
+├── pageObjects/               # Page Object Model classes
 ├── tests/
-│   ├── api/                     # API tests
-│   └── e2e/                     # End-to-end tests
-│       └── login.spec.ts        # Login test scenarios
-├── allure-results/              # Allure test reports (generated)
-├── playwright-report/           # Playwright HTML reports (generated)
-├── test-results/                # Test execution results (generated)
-├── performance-tests/           # K6 performance tests
-│   ├── login-test.js            # Example K6 test
-│   ├── k6-results.json          # K6 test results (generated)
-│   └── package.json             # K6 dependencies and scripts
-├── .env.stg                     # Staging environment variables
-├── .env.uat                     # UAT environment variables
-├── playwright.config.ts         # Playwright configuration
-├── package.json                 # Project dependencies and scripts
-├── eslint.config.mjs            # ESLint configuration
-└── helpers/                     # Utility and constants files
-  ├── constants.ts
-  └── utilities.ts
+│   ├── api/                   # API tests
+│   ├── e2e/                   # End-to-end tests
+│   └── gherkin/               # Gherkin/Cucumber tests
+│       ├── features/          # Feature files (e2e, api)
+│       ├── step_definitions/  # Step definitions (e2e, api)
+│       └── helpers/           # Helper functions
+├── performance-tests/         # K6 performance tests
+├── .env.stg                   # Staging environment variables
+├── .env.uat                   # UAT environment variables
+├── playwright.config.ts       # Playwright configuration
+├── playwright.api.config.ts   # Playwright API configuration
+├── eslint.config.mjs          # ESLint configuration
+├── package.json               # Project dependencies and scripts
+├── allure-results/            # Allure reports (generated)
+├── playwright-report/         # Playwright HTML reports (generated)
+└── test-results/              # Test execution results (generated)
 ```
-# K6 Performance Tests
+
+## Installation
+
+```bash
+npm ci
+npx playwright install --with-deps
+```
+
+## Environment Configuration
+
+Create environment-specific `.env` files:
+
+**`.env.stg`** (Staging):
+```bash
+BASE_URL=https://staging.demoblaze.com
+API_URL=https://api.staging.demoblaze.com
+TIMEOUT=30000
+```
+
+**`.env.uat`** (UAT):
+```bash
+BASE_URL=https://uat.demoblaze.com
+API_URL=https://api.uat.demoblaze.com
+TIMEOUT=30000
+```
+
+The framework loads the appropriate `.env` file based on the `RUNNING_ENV` or `ENV` environment variable.
+
+## Running Tests
+
+### Playwright Tests
+
+```bash
+# E2E Tests
+npm run test:e2e-chromium        # Chromium (headed)
+npm run test:e2e-chromium:ci     # Chromium (headless)
+npm run test:e2e-firefox         # Firefox (headed)
+npm run test:e2e-firefox:ci      # Firefox (headless)
+
+# Run by tag
+npm run test:e2e-chromium -- --grep @regression
+npm run test:e2e-chromium -- --grep "@login|@regression"
+npm run test:e2e-chromium -- --grep-invert @skip
+
+# With environment
+RUNNING_ENV=.uat npm run test:e2e-chromium
+```
+
+### Gherkin/Cucumber Tests
+
+```bash
+# E2E Tests
+npm run test:gherkin:e2e              # All E2E (Chromium)
+npm run test:gherkin:e2e:chromium     # Chromium
+npm run test:gherkin:e2e:firefox      # Firefox
+npm run test:gherkin:e2e:webkit       # WebKit
+
+# API Tests
+npm run test:gherkin:api              # All API tests
+
+# All Tests
+npm run test:gherkin:all              # E2E + API
+
+# With browser/environment
+BROWSER=firefox npm run test:gherkin:e2e
+ENV=uat npm run test:gherkin:e2e
+ENV=uat BROWSER=firefox npm run test:gherkin:e2e
+```
+
+### Run by Feature File or Tag
+
+```bash
+# E2E: Run specific feature file
+npm run test:gherkin:e2e:file -- tests/gherkin/features/e2e/login.feature
+
+# E2E: Run by tag
+npm run test:gherkin:e2e:tag -- @login
+npm run test:gherkin:e2e:tag -- "@login or @regression"
+
+# API: Run specific feature file
+npm run test:gherkin:api:file -- tests/gherkin/features/api/account.feature
+
+# API: Run by tag
+npm run test:gherkin:api:tag -- @api
+
+# With browser/environment
+BROWSER=firefox npm run test:gherkin:e2e:tag -- @login
+ENV=uat npm run test:gherkin:e2e:file -- tests/gherkin/features/e2e/login.feature
+```
+
+### K6 Performance Tests
 
 K6 is used for API and performance testing. K6 scripts are located in the `performance-tests/` directory.
 
-### Example K6 Test: `performance-tests/login-test.js`
+**Example K6 Test**: `performance-tests/login-test.js`
 
 This script performs a login load test against the API:
 
@@ -62,7 +145,7 @@ export const options = {
       maxVUs: 50,
       stages: [
         { duration: '5s', target: 50 },
-        { duration: '20', target: 50 },
+        { duration: '20s', target: 50 },
       ],
     },
   },
@@ -88,150 +171,94 @@ export default function () {
 }
 ```
 
-### Running K6 Performance Tests
+**Running K6 Performance Tests**
 
 From the `performance-tests/` directory:
 
 ```bash
 # Run the login performance test and output results to k6-results.json
-npm run test:performance -- -e ENV:<environment> login-test.js
+npm run test:performance -- -e ENV:stg login-test.js
 
-# Run a specific test file
-npm run test:performance:ci:file -- -e ENV:<environment> <your-test-file.js>
+# Run in CI mode (no debug output)
+npm run test:performance:ci -- -e ENV:stg login-test.js
+
+# Run with different environment
+npm run test:performance -- -e ENV:uat login-test.js
 ```
 
 Test results are saved to `performance-tests/k6-results.json`.
 
 For more information, see the [K6 documentation](https://k6.io/docs/).
 
-## Environment Configuration
-
-The framework supports multiple environments through `.env` files. Create environment-specific configuration files:
-
-### Example: `.env.stg`
-```bash
-# Staging Environment
-BASE_URL=https://staging.demoblaze.com
-API_URL=https://api.staging.demoblaze.com
-TIMEOUT=30000
-```
-
-### Example: `.env.uat`
-```bash
-# UAT Environment
-BASE_URL=https://uat.demoblaze.com
-API_URL=https://api.uat.demoblaze.com
-TIMEOUT=30000
-```
-
-**Note:** The framework will load the appropriate `.env` file based on the `RUNNING_ENV` environment variable.
-
-## Running Tests
-
-### Local Execution
-
-Run tests against **staging** environment (default):
-```bash
-npm run test:e2e-chromium
-```
-
-Run tests against **UAT** environment:
-```bash
-RUNNING_ENV=.uat npm run test:e2e-chromium
-```
-
-Run tests in **headless mode** (CI):
-```bash
-npm run test:e2e-chromium:ci
-```
-
-Run tests with **Firefox**:
-```bash
-npm run test:e2e-firefox
-RUNNING_ENV=.uat npm run test:e2e-firefox
-```
-
-### Running Tests by Tag
-
-Use the `--` option to pass additional Playwright arguments. Tag your tests in spec files with `@tag`:
-
-```typescript
-// Example test with tags
-test('@smoke @login User can login successfully', async ({ page }) => {
-  // test code
-});
-
-test("Should login successfully with valid credential", { tag: ["@loginSuccess"] }, async (page) => {
-}
-```
-
-Run tests by **tag**:
-```bash
-# Run smoke tests only
-npm run test:e2e-chromium -- --grep @smoke
-
-# Run login tests only
-npm run test:e2e-chromium -- --grep @login
-
-# Run tests with multiple tags (OR logic - match any tag)
-npm run test:e2e-chromium -- --grep "@smoke|@regression"
-
-# Run tests with multiple tags (AND logic - match all tags)
-npm run test:e2e-chromium -- --grep "(?=.*@smoke)(?=.*@login)"
-
-# Exclude specific tags
-npm run test:e2e-chromium -- --grep-invert @skip
-
-# Combine with environment
-RUNNING_ENV=.uat npm run test:e2e-chromium -- --grep @smoke
-
-# Multiple tags with environment
-RUNNING_ENV=.uat npm run test:e2e-chromium -- --grep "@smoke|@regression"
-```
-
-### Available Scripts
+## Available Scripts
 
 ```bash
-# Testing
-npm run test:e2e-chromium        # Run E2E tests in Chromium (headed)
-npm run test:e2e-chromium:ci     # Run E2E tests in Chromium (headless)
-npm run test:e2e-firefox         # Run E2E tests in Firefox (headed)
-npm run test:e2e-firefox:ci      # Run E2E tests in Firefox (headless) 
+# Playwright Tests
+npm run test:e2e-chromium        # Run E2E in Chromium (headed)
+npm run test:e2e-chromium:ci     # Run E2E in Chromium (headless)
+npm run test:e2e-firefox         # Run E2E in Firefox (headed)
+npm run test:e2e-firefox:ci      # Run E2E in Firefox (headless)
+
+# Gherkin Tests
+npm run test:gherkin:e2e         # All E2E Gherkin tests
+npm run test:gherkin:e2e:chromium # E2E in Chromium
+npm run test:gherkin:e2e:firefox  # E2E in Firefox
+npm run test:gherkin:e2e:webkit   # E2E in WebKit
+npm run test:gherkin:api         # All API Gherkin tests
+npm run test:gherkin:all         # All Gherkin tests
+
+# K6 Performance Tests (from performance-tests/ directory)
+cd performance-tests && npm run test:performance -- -e ENV:stg login-test.js
 
 # Reports
 npm run serve-report             # Serve Allure report
 
 # Code Quality
-npm run format:check             # Check code formatting
-npm run format:fix               # Fix code formatting
-npm run lint:check               # Check linting issues
-npm run lint:fix                 # Fix linting issues
-```
-
-## GitHub Actions CI/CD
-
-The workflow supports manual environment selection:
-
-1. Go to **Actions** tab in GitHub
-2. Select **Playwright Tests** workflow
-3. Click **Run workflow**
-4. Choose environment: `stg` or `uat`
-5. Click **Run workflow**
-
-For push/PR events, tests run against **staging** by default.
-
-## Installation
-
-```bash
-# Install dependencies
-npm ci
-
-# Install Playwright browsers
-npx playwright install --with-deps
+npm run format:check             # Check formatting
+npm run format:fix               # Fix formatting
+npm run lint:check               # Check linting
+npm run lint:fix                 # Fix linting
 ```
 
 ## Reports
 
 - **Playwright HTML Report**: `playwright-report/index.html`
-- **Allure Report**: Run `npm run serve-report` to view
-- **JUnit Report**: `results.xml` (for CI integration)
+- **Allure Report**: `allure-results/` (view with `npm run serve-report`)
+- **Cucumber Reports**: `tests/gherkin/cucumber-report.html` and `.json`
+- **Screenshots**: `test-results/gherkin-screenshots/` (on failure)
+
+## GitHub Actions CI/CD
+
+### Workflows
+
+- **playwright-e2e.yml**: Playwright E2E tests
+- **playwright-api.yml**: Playwright API tests
+- **gherkin-e2e.yml**: Gherkin E2E tests (Chromium)
+- **gherkin-api.yml**: Gherkin API tests
+- **performance.yml**: K6 performance tests
+
+### Running Workflows
+
+1. Go to **Actions** tab in GitHub
+2. Select the workflow
+3. Click **Run workflow**
+4. Choose environment: `stg` or `uat`
+
+For push/PR events, tests run against **staging** by default.
+
+### Artifacts
+
+After workflow completion, you can download:
+- Cucumber Reports (HTML/JSON)
+- Allure Results (JSON files)
+- Allure Report (Single HTML file)
+- Screenshots (on failure)
+
+## Notes
+
+- **Gherkin Tests**: Use same page objects and API classes as Playwright tests
+- **Browser Support**: Chromium (default), Firefox, WebKit
+- **Environment Variables**: `ENV` (stg/uat), `BASE_URL`, `API_URL`, `BROWSER`
+- **CI Mode**: Tests automatically run headless on GitHub Actions
+- **Screenshots**: Automatically captured on test failure
+- **Allure Reports**: Generated automatically for each scenario
