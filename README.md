@@ -118,7 +118,7 @@ RUNNING_ENV=.uat npm run test:e2e-chromium -- --grep "@smoke|@regression"
 npm run test:e2e-chromium        # Run E2E tests in Chromium (headed)
 npm run test:e2e-chromium:ci     # Run E2E tests in Chromium (headless)
 npm run test:e2e-firefox         # Run E2E tests in Firefox (headed)
-npm run test:e2e-firefox:ci      # Run E2E tests in Firefox (headless)
+npm run test:e2e-firefox:ci      # Run E2E tests in Firefox (headless) 
 
 # Reports
 npm run serve-report             # Serve Allure report
