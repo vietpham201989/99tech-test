@@ -51,7 +51,7 @@ jobs:
       - name: Run Performance tests
         run: |
           cd performance-tests
-          npm run test:performance:ci -- -e ENV=${{ github.event.inputs.environment || 'stg' }} ${{ github.event.inputs.file || 'login-tests.js' }}
+          npm run test:performance:ci -- -e ENV=${{ github.event.inputs.environment || 'stg' }} ${{ github.event.inputs.file || 'login-test.js' }}
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
