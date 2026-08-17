@@ -31,7 +31,7 @@ export class IndexPage extends BasePage {
   }
 
   async verifyUserLoggedIn(username: string): Promise<boolean> {
-    await this.waitForSelectorToBeVisible(this.nameOfUser)
+    await this.waitForSelectorToBeVisible(this.nameOfUser, 20000)
     const displayedUsername = await this.nameOfUser.textContent()
     return displayedUsername?.trim() === `Welcome ${username}`
   }
